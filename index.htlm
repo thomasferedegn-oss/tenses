@@ -1,0 +1,1200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>English Tenses Quiz (Active & Passive)</title>
+    <!-- Tailwind CSS for modern responsive styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Inter and Noto Sans Ethiopic for smooth bilingual rendering -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Noto+Sans+Ethiopic:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome for beautiful icon styling -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        body {
+            font-family: 'Inter', 'Noto Sans Ethiopic', sans-serif;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 min-h-screen text-slate-800 flex flex-col justify-between">
+
+    <!-- Navigation / Header -->
+    <header class="bg-gradient-to-r from-indigo-700 via-indigo-800 to-purple-800 text-white shadow-md">
+        <div class="max-w-6xl mx-auto px-4 py-4 flex flex-col sm:flex-row justify-between items-center gap-2">
+            <div class="flex items-center space-x-3">
+                <div class="bg-white/10 p-2.5 rounded-xl border border-white/20">
+                    <i class="fa-solid fa-graduation-cap text-2xl text-amber-300"></i>
+                </div>
+                <div>
+                    <h1 class="text-xl font-bold tracking-tight">Active & Passive Voice Quiz</h1>
+                    <p class="text-xs text-indigo-200">Bilingual English & Amharic Instruction</p>
+                </div>
+            </div>
+            <div class="flex items-center space-x-3">
+                <span id="headerTimer" class="hidden bg-black/20 text-indigo-100 text-xs px-3 py-1.5 rounded-full border border-indigo-500/30">
+                    <i class="fa-regular fa-clock mr-1 text-amber-300"></i> Time: <span id="timeDisplay" class="font-mono font-semibold">00:00</span>
+                </span>
+                <button onclick="toggleTeacherMode()" class="bg-indigo-600/50 hover:bg-indigo-600 text-white text-xs font-semibold px-3 py-1.5 rounded-lg transition border border-indigo-400/30">
+                    <i class="fa-solid fa-lock mr-1.5"></i> Teacher Console
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="max-w-4xl w-full mx-auto px-4 py-8 flex-grow">
+        
+        <!-- CUSTOM NOTIFICATION POPUPS (No native alert fallback) -->
+        <div id="toastNotification" class="hidden fixed bottom-5 right-5 z-50 transform translate-y-10 opacity-0 transition-all duration-300 bg-slate-900 text-white px-5 py-4 rounded-xl shadow-2xl flex items-center space-x-3 border border-slate-700 max-w-sm">
+            <div id="toastIcon" class="p-1 rounded-full text-lg"></div>
+            <div>
+                <p id="toastMessage" class="text-sm font-semibold"></p>
+            </div>
+        </div>
+
+        <!-- STAGE 1: Welcome & Identification Registration -->
+        <div id="registrationScreen" class="bg-white rounded-2xl shadow-xl border border-slate-100 p-6 md:p-10 transition-all duration-500 transform scale-100">
+            <div class="text-center max-w-xl mx-auto mb-8">
+                <span class="bg-indigo-100 text-indigo-800 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">Assessment Portal</span>
+                <h2 class="text-3xl font-extrabold text-slate-900 mt-3">English Tenses Mastery Quiz</h2>
+                <p class="text-slate-500 mt-2 text-sm md:text-base">
+                    Test your understanding of complex active and passive tense transitions. Enter your credentials below to initialize the examination session.
+                </p>
+            </div>
+
+            <!-- Registration Input Card -->
+            <div class="max-w-md mx-auto bg-slate-50 rounded-xl p-6 border border-slate-100 shadow-inner">
+                <form id="registrationForm" onsubmit="handleRegistration(event)" class="space-y-5">
+                    <div>
+                        <label for="studentName" class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5 flex items-center">
+                            <i class="fa-solid fa-user text-indigo-500 mr-2"></i> Full Name / ሙሉ ስም <span class="text-red-500">*</span>
+                        </label>
+                        <input type="text" id="studentName" placeholder="e.g., Chala Kebede" required
+                               class="w-full px-4 py-3 bg-white border border-slate-200 rounded-lg text-sm font-medium focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition duration-150">
+                    </div>
+                    <div>
+                        <label for="studentId" class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5 flex items-center">
+                            <i class="fa-solid fa-id-card text-indigo-500 mr-2"></i> Student ID Number / መለያ ቁጥር <span class="text-red-500">*</span>
+                        </label>
+                        <input type="text" id="studentId" placeholder="e.g., RU/1042/18" required
+                               class="w-full px-4 py-3 bg-white border border-slate-200 rounded-lg text-sm font-medium focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition duration-150">
+                    </div>
+                    <button type="submit" 
+                            class="w-full bg-gradient-to-r from-indigo-600 to-indigo-800 hover:from-indigo-700 hover:to-indigo-950 text-white font-bold py-3.5 px-6 rounded-lg transition duration-200 transform hover:scale-[1.01] shadow-lg flex items-center justify-center space-x-2">
+                        <span>Begin Assessment / ፈተናውን ጀምር</span>
+                        <i class="fa-solid fa-circle-play"></i>
+                    </button>
+                </form>
+            </div>
+
+            <div class="mt-8 grid grid-cols-1 sm:grid-cols-3 gap-4 text-center border-t border-slate-100 pt-6">
+                <div class="p-3 bg-slate-50/50 rounded-lg">
+                    <span class="block text-xl font-bold text-indigo-600">12</span>
+                    <span class="text-xs font-semibold text-slate-500">Tense Questions</span>
+                </div>
+                <div class="p-3 bg-slate-50/50 rounded-lg">
+                    <span class="block text-xl font-bold text-emerald-600">Bilingual</span>
+                    <span class="text-xs font-semibold text-slate-500">English & Amharic</span>
+                </div>
+                <div class="p-3 bg-slate-50/50 rounded-lg">
+                    <span class="block text-xl font-bold text-amber-600">Auto</span>
+                    <span class="text-xs font-semibold text-slate-500">Grader & Mail Dispatcher</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- STAGE 2: Interactive Quiz Board (Hidden by default) -->
+        <div id="quizBoard" class="hidden space-y-6">
+            
+            <!-- Progress Status Bar -->
+            <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-4 flex items-center justify-between">
+                <div class="flex-grow mr-6">
+                    <div class="flex justify-between text-xs font-bold text-slate-600 mb-2">
+                        <span>PROGRESS: Question <span id="currentQNum" class="text-indigo-600">1</span> of <span id="totalQs">12</span></span>
+                        <span id="progressBarPercentage" class="text-indigo-600">0%</span>
+                    </div>
+                    <div class="w-full bg-slate-100 rounded-full h-2.5 overflow-hidden">
+                        <div id="progressBar" class="bg-gradient-to-r from-indigo-500 to-indigo-700 h-2.5 rounded-full transition-all duration-300" style="width: 0%"></div>
+                    </div>
+                </div>
+                <div class="text-right flex-shrink-0">
+                    <span class="text-xs text-slate-400 block uppercase font-bold">Answered</span>
+                    <span id="answeredRatio" class="text-sm font-extrabold text-indigo-700">0/12</span>
+                </div>
+            </div>
+
+            <!-- Quiz Core Card -->
+            <div class="bg-white rounded-2xl shadow-xl border border-slate-100 overflow-hidden">
+                <!-- Question Header -->
+                <div class="bg-indigo-50 px-6 py-4 border-b border-indigo-100 flex justify-between items-center">
+                    <span class="text-xs font-bold uppercase tracking-wider text-indigo-800 bg-indigo-100 px-2.5 py-1 rounded">
+                        Voice Category: <span id="voiceBadge">Active Voice</span>
+                    </span>
+                    <span class="text-xs text-slate-400 font-semibold" id="questionTenseType">Tense Category</span>
+                </div>
+
+                <!-- Question Text -->
+                <div class="p-6 md:p-8">
+                    <h3 id="questionText" class="text-lg md:text-xl font-bold text-slate-900 leading-relaxed">
+                        Loading question...
+                    </h3>
+                    
+                    <!-- Formatted options container -->
+                    <div id="optionsContainer" class="mt-6 space-y-3.5">
+                        <!-- Options generated dynamically -->
+                    </div>
+
+                    <!-- Bilingual Feedback Panel (Initially hidden, revealed on item click) -->
+                    <div id="feedbackPanel" class="hidden mt-6 rounded-xl border p-5 transition duration-300">
+                        <div class="flex items-start space-x-3">
+                            <span id="feedbackIcon" class="text-xl mt-1"></span>
+                            <div class="flex-1 space-y-3">
+                                <h4 id="feedbackTitle" class="text-sm font-bold uppercase tracking-wider"></h4>
+                                
+                                <div class="space-y-2 text-sm leading-relaxed text-slate-700 border-l-2 pl-3 border-indigo-200">
+                                    <p class="font-medium text-slate-900">
+                                        <span class="inline-block bg-indigo-100 text-indigo-800 font-bold px-1.5 py-0.5 rounded text-[10px] uppercase align-middle mr-1">English Explanation</span> 
+                                        <span id="explanationEN">English logic analysis...</span>
+                                    </p>
+                                    <p class="font-normal text-slate-800 pt-1">
+                                        <span class="inline-block bg-amber-100 text-amber-800 font-bold px-1.5 py-0.5 rounded text-[10px] uppercase align-middle mr-1">በአማርኛ ማብራሪያ</span> 
+                                        <span id="explanationAM" class="leading-relaxed">የአማርኛ ማብራሪያ ትንተና...</span>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quiz Navigation Controls -->
+            <div class="flex items-center justify-between gap-4">
+                <button onclick="navigatePrevious()" id="prevBtn" disabled
+                        class="bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 disabled:opacity-40 disabled:hover:bg-white text-sm font-bold px-5 py-3 rounded-xl transition flex items-center space-x-2 shadow-sm">
+                    <i class="fa-solid fa-chevron-left"></i>
+                    <span>Back / ወደኋላ</span>
+                </button>
+
+                <div class="flex items-center space-x-2">
+                    <button onclick="skipQuestion()" id="skipBtn"
+                            class="bg-amber-50 hover:bg-amber-100 text-amber-800 text-sm font-bold px-5 py-3 rounded-xl transition flex items-center space-x-2 border border-amber-200 shadow-sm">
+                        <span>Skip / ዝለል</span>
+                        <i class="fa-solid fa-angles-right"></i>
+                    </button>
+                    
+                    <button onclick="navigateNext()" id="nextBtn"
+                            class="bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-bold px-6 py-3 rounded-xl transition flex items-center space-x-2 shadow-md">
+                        <span>Next / ቀጣይ</span>
+                        <i class="fa-solid fa-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Submission Core Banner -->
+            <div id="submitBanner" class="hidden bg-indigo-50 border border-indigo-200 rounded-xl p-5 flex flex-col md:flex-row justify-between items-center gap-4 transition-all duration-300">
+                <div class="flex items-center space-x-3 text-indigo-900">
+                    <i class="fa-solid fa-circle-check text-2xl text-indigo-600"></i>
+                    <div>
+                        <h4 class="font-bold">You have answered all questions!</h4>
+                        <p class="text-xs text-indigo-700">Please review your answers before submitting the final attempt.</p>
+                    </div>
+                </div>
+                <button onclick="triggerSubmitQuiz()" 
+                        class="w-full md:w-auto bg-gradient-to-r from-emerald-600 to-teal-700 hover:from-emerald-700 hover:to-teal-800 text-white font-extrabold px-8 py-3.5 rounded-xl transition transform hover:scale-[1.03] shadow-lg flex items-center justify-center space-x-2">
+                    <span>Submit Quiz / ፈተናውን አስረክብ</span>
+                    <i class="fa-solid fa-cloud-arrow-up"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- STAGE 3: Performance & Results Dashboard -->
+        <div id="resultsScreen" class="hidden space-y-8 animate-fade-in">
+            <!-- Score Card Overlay -->
+            <div class="bg-white rounded-2xl shadow-xl border border-slate-100 p-6 md:p-8">
+                <div class="text-center max-w-lg mx-auto">
+                    <span id="resultBadge" class="text-xs font-bold px-4 py-1.5 rounded-full uppercase tracking-widest text-white"></span>
+                    
+                    <h2 class="text-3xl font-black mt-4 text-slate-950">Quiz Performance Report</h2>
+                    <p class="text-slate-500 text-sm mt-1" id="studentDetailSummary">Candidate Credentials Details</p>
+
+                    <!-- Score Radial Graphic representation -->
+                    <div class="relative w-40 h-40 mx-auto my-8 flex items-center justify-center">
+                        <svg class="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
+                            <!-- Track circle -->
+                            <circle cx="50" cy="50" r="40" stroke="#f1f5f9" stroke-width="10" fill="transparent" />
+                            <!-- Score bar circle -->
+                            <circle id="scoreProgressCircle" cx="50" cy="50" r="40" stroke="#6366f1" stroke-width="10" fill="transparent" 
+                                    stroke-dasharray="251.2" stroke-dashoffset="251.2" stroke-linecap="round" class="transition-all duration-1000 ease-out" />
+                        </svg>
+                        <div class="absolute inset-0 flex flex-col justify-center items-center">
+                            <span id="scoreTextFraction" class="text-3xl font-extrabold text-slate-900">0 / 0</span>
+                            <span id="scorePercentage" class="text-sm font-bold text-slate-500">0%</span>
+                        </div>
+                    </div>
+
+                    <h3 id="appraisalMessage" class="text-lg font-bold text-indigo-900 px-4 py-2 bg-indigo-50 rounded-lg inline-block">Appraising...</h3>
+                </div>
+
+                <!-- Stats Breakdown Cards -->
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8 border-t border-b border-slate-100 py-6 text-center">
+                    <div class="p-3 bg-slate-50 rounded-xl">
+                        <span class="block text-xs text-slate-400 font-bold uppercase mb-1">Total Items</span>
+                        <span id="statTotal" class="text-xl font-extrabold text-slate-800">12</span>
+                    </div>
+                    <div class="p-3 bg-slate-50 rounded-xl">
+                        <span class="block text-xs text-slate-400 font-bold uppercase mb-1">Correct</span>
+                        <span id="statCorrect" class="text-xl font-extrabold text-emerald-600">0</span>
+                    </div>
+                    <div class="p-3 bg-slate-50 rounded-xl">
+                        <span class="block text-xs text-slate-400 font-bold uppercase mb-1">Incorrect</span>
+                        <span id="statIncorrect" class="text-xl font-extrabold text-rose-500">0</span>
+                    </div>
+                    <div class="p-3 bg-slate-50 rounded-xl">
+                        <span class="block text-xs text-slate-400 font-bold uppercase mb-1">Time Elapsed</span>
+                        <span id="statTime" class="text-xl font-extrabold text-slate-800">00:00</span>
+                    </div>
+                </div>
+
+                <!-- Email Results CTA Dispatcher card -->
+                <div class="mt-8 bg-gradient-to-r from-indigo-50 to-purple-50 rounded-2xl p-6 border border-indigo-100 flex flex-col md:flex-row items-center justify-between gap-6">
+                    <div class="flex items-center space-x-4">
+                        <div class="bg-indigo-600 text-white p-3.5 rounded-xl text-xl shadow-md">
+                            <i class="fa-solid fa-envelope-circle-check"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-indigo-950 text-base">Send Score to Instructor</h4>
+                            <p class="text-xs text-slate-600 mt-0.5">Dispatches verification email containing credentials to <strong class="text-indigo-800">mesayferedegn2@gmail.com</strong></p>
+                        </div>
+                    </div>
+                    <button onclick="dispatchScoreEmail()" 
+                            class="w-full md:w-auto bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-xl transition duration-150 transform hover:scale-[1.02] shadow-md flex items-center justify-center space-x-2">
+                        <span>Send Score Reports</span>
+                        <i class="fa-solid fa-paper-plane"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Detailed Question Log for Post-Quiz Review -->
+            <div class="bg-white rounded-2xl shadow-xl border border-slate-100 overflow-hidden">
+                <div class="px-6 py-4 border-b border-slate-100 bg-slate-50/50 flex justify-between items-center">
+                    <h3 class="text-sm font-bold uppercase tracking-wider text-slate-700">Detailed Answer Audit Log</h3>
+                    <span class="text-xs text-slate-400 font-medium">Bilingual explanatory review enabled</span>
+                </div>
+                <div id="resultsAuditContainer" class="divide-y divide-slate-100">
+                    <!-- Dynamic review cards added here -->
+                </div>
+            </div>
+            
+            <!-- Back to Start Button -->
+            <div class="text-center">
+                <button onclick="restartAssessment()" class="inline-flex items-center space-x-2 text-indigo-600 hover:text-indigo-800 font-bold text-sm bg-indigo-50 hover:bg-indigo-100 px-5 py-3 rounded-xl transition">
+                    <i class="fa-solid fa-rotate-left"></i>
+                    <span>Retake Quiz / ፈተናውን እንደገና ውሰድ</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- STAGE 4: Teacher Console Panel (Password protected placeholder) -->
+        <div id="teacherConsole" class="hidden bg-white rounded-2xl shadow-xl border border-slate-100 p-6 md:p-8">
+            <div class="border-b border-slate-100 pb-5 mb-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                <div>
+                    <h2 class="text-2xl font-black text-slate-950"><i class="fa-solid fa-toolbox text-indigo-600 mr-2"></i>Teacher Management Console</h2>
+                    <p class="text-slate-500 text-xs mt-0.5">Review ongoing session scores and historical tracking logs</p>
+                </div>
+                <button onclick="closeTeacherMode()" class="bg-slate-100 hover:bg-slate-200 text-slate-600 px-3 py-1.5 rounded-lg text-xs font-semibold transition">
+                    <i class="fa-solid fa-circle-xmark mr-1"></i> Exit Admin Mode
+                </button>
+            </div>
+
+            <!-- Score Stats Metrics dashboard (Dynamic mockup & saved array) -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                <div class="p-4 bg-indigo-50 border border-indigo-100 rounded-xl flex items-center space-x-3">
+                    <div class="bg-indigo-100 text-indigo-800 p-2.5 rounded-lg text-lg"><i class="fa-solid fa-users"></i></div>
+                    <div>
+                        <span class="block text-slate-400 text-[10px] font-bold uppercase">Total Session Candidates</span>
+                        <span id="adminTotalCandidates" class="text-lg font-bold text-slate-800">0</span>
+                    </div>
+                </div>
+                <div class="p-4 bg-emerald-50 border border-emerald-100 rounded-xl flex items-center space-x-3">
+                    <div class="bg-emerald-100 text-emerald-800 p-2.5 rounded-lg text-lg"><i class="fa-solid fa-chart-line"></i></div>
+                    <div>
+                        <span class="block text-slate-400 text-[10px] font-bold uppercase">Average Score %</span>
+                        <span id="adminAverageScore" class="text-lg font-bold text-slate-800">0%</span>
+                    </div>
+                </div>
+                <div class="p-4 bg-amber-50 border border-amber-100 rounded-xl flex items-center space-x-3">
+                    <div class="bg-amber-100 text-amber-800 p-2.5 rounded-lg text-lg"><i class="fa-solid fa-award"></i></div>
+                    <div>
+                        <span class="block text-slate-400 text-[10px] font-bold uppercase">Top Performing Score</span>
+                        <span id="adminTopScore" class="text-lg font-bold text-slate-800">0%</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Registered Student Session Submissions Table -->
+            <div class="overflow-x-auto rounded-xl border border-slate-200">
+                <table class="min-w-full divide-y divide-slate-200 text-left text-sm">
+                    <thead class="bg-slate-50 text-xs font-bold uppercase text-slate-600 tracking-wider">
+                        <tr>
+                            <th class="px-6 py-3.5">Student Name</th>
+                            <th class="px-6 py-3.5">Student ID</th>
+                            <th class="px-6 py-3.5 text-center">Score Ratio</th>
+                            <th class="px-6 py-3.5 text-center">Percentage</th>
+                            <th class="px-6 py-3.5 text-center">Time Taken</th>
+                            <th class="px-6 py-3.5 text-right">Date Completed</th>
+                        </tr>
+                    </thead>
+                    <tbody id="teacherRecordsTable" class="divide-y divide-slate-200 bg-white text-slate-700">
+                        <!-- Filled on submit or dynamically mocked -->
+                        <tr class="placeholder-row">
+                            <td colspan="6" class="px-6 py-10 text-center text-slate-400 font-medium">
+                                <i class="fa-solid fa-folder-open text-3xl mb-2.5 block text-slate-300"></i>
+                                No candidates have submitted completed assessments in this active web session yet.
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Demo Load Seed Data -->
+            <div class="mt-4 flex justify-between items-center text-xs text-slate-400">
+                <span>Database updates in memory locally.</span>
+                <button onclick="seedMockData()" class="text-indigo-600 hover:text-indigo-800 font-semibold flex items-center space-x-1">
+                    <i class="fa-solid fa-seedling mr-1"></i> Seed simulated demo submission records
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-slate-400 py-6 text-xs text-center border-t border-slate-800 mt-12">
+        <div class="max-w-6xl mx-auto px-4 space-y-2">
+            <p class="font-bold text-slate-300">English Language Assessment Portal — Active & Passive Voice Tenses</p>
+            <p>Designed for immediate grading, instructional diagnostics, and streamlined teacher notifications.</p>
+            <p class="text-[10px] text-slate-500">© 2026 Instructional Quiz Platform. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- JAVASCRIPT LOGIC SECTION -->
+    <script>
+        // Data Structure holding all the diagnostic active and passive voice questions
+        const quizQuestions = [
+            {
+                id: 1,
+                voice: "Active Voice",
+                tenseType: "Past Continuous",
+                question: "While the chef ___ the main course, the kitchen assistants were preparing the raw salad ingredients.",
+                options: [
+                    "was cooking",
+                    "is cooking",
+                    "cooked",
+                    "was cooked"
+                ],
+                correctAnswer: 0,
+                explanationEN: "The Past Continuous active construction ('was cooking') describes an action that was ongoing in the past concurrent with another past continuous action ('were preparing').",
+                explanationAM: "ያለፈው ቀጣይ ንቁ ድምፅ (Past Continuous - 'was cooking') በታሪክ ውስጥ ሌላ ተመሳሳይ ያለፈ ተግባር ('were preparing') እየተከናወነ በነበረበት ጊዜ በሂደት ላይ ለነበረ ድርጊት ያገለግላል።"
+            },
+            {
+                id: 2,
+                voice: "Passive Voice",
+                tenseType: "Present Simple Passive",
+                question: "The ancient ruins in Lalibela ___ by thousands of international tourists every single year.",
+                options: [
+                    "are visited",
+                    "visit",
+                    "were visited",
+                    "are visiting"
+                ],
+                correctAnswer: 0,
+                explanationEN: "The Present Simple Passive ('are visited') is correct because it addresses a habitual, recurring yearly action where the ruins (subject) receive the action from tourists.",
+                explanationAM: "የአሁኑ ቀላል ተገብሮ ድምፅ (Present Simple Passive - 'are visited') ጥቅም ላይ የዋለው በየዓመቱ የሚደጋገም ድርጊትን ለመግለጽ ሲሆን ባለቤቶቹ (የታሪክ ፍርስራሾቹ) የቱሪስቶችን ጉብኝት ስለሚቀበሉ ነው።"
+            },
+            {
+                id: 3,
+                voice: "Passive Voice",
+                tenseType: "Past Perfect Passive",
+                question: "By the time the medical rescue helicopter arrived, the injured mountaineers ___ off the dangerous ridge.",
+                options: [
+                    "had been carried",
+                    "have been carried",
+                    "had carried",
+                    "were carrying"
+                ],
+                correctAnswer: 0,
+                explanationEN: "The Past Perfect Passive ('had been carried') signifies an action completed in the passive aspect before another definite past action (the arrival of the helicopter).",
+                explanationAM: "ያለፈው ፍጹም ተገብሮ ድምፅ (Past Perfect Passive - 'had been carried') የተመረጠው ሌላ ያለፈ ድርጊት (የሄሊኮፕተሩ መድረስ) ከመከሰቱ በፊት የተጠናቀቀን ድርጊት በተገብሮ ለመግለጽ ነው።"
+            },
+            {
+                id: 4,
+                voice: "Active Voice",
+                tenseType: "Past Simple",
+                question: "The regional technology corporation ___ seventy new software specialists last week to handle the digital transition.",
+                options: [
+                    "hired",
+                    "was hired",
+                    "has hired",
+                    "were hiring"
+                ],
+                correctAnswer: 0,
+                explanationEN: "The Active Past Simple form ('hired') is used for a completed action initiated by the corporate entity (subject) during a specific past duration marker ('last week').",
+                explanationAM: "ያለፈው ቀላል ንቁ ድምፅ (Active Past Simple - 'hired') የተጠናቀቀን ያለፈ ድርጊት ለመግለጽ ያገለግላል፤ ምክንያቱም ኩባንያው ባለፈው ሳምንት ውስጥ የፈጸመውን ድርጊት በቀጥታ ስለሚገልጽ ነው።"
+            },
+            {
+                id: 5,
+                voice: "Passive Voice",
+                tenseType: "Present Simple Passive",
+                question: "Based on immediate meteorological indications, a heavy storm ___ to hit the coastal regions by tomorrow afternoon.",
+                options: [
+                    "is expected",
+                    "expects",
+                    "has expected",
+                    "was expecting"
+                ],
+                correctAnswer: 0,
+                explanationEN: "The Present Simple Passive ('is expected') describes the current consensus state of expectation about a future event. The storm does not expect; it is expected.",
+                explanationAM: "የአሁኑ ቀላል ተገብሮ ድምፅ (Present Simple Passive - 'is expected') ጥቅም ላይ የዋለው ስለ ወደፊቱ አየር ሁኔታ አሁን ያለውን ግምት ለመግለጽ ነው፤ ማዕበሉ ድርጊቱን ፈጻሚ ሳይሆን ተቀባይ ነው።"
+            },
+            {
+                id: 6,
+                voice: "Passive Voice",
+                tenseType: "Future Perfect Passive",
+                question: "The legally binding partnership agreement ___ by the executive boards of both corporations before the deadline tomorrow.",
+                options: [
+                    "will have been signed",
+                    "will sign",
+                    "is signed",
+                    "will be signing"
+                ],
+                correctAnswer: 0,
+                explanationEN: "The Future Perfect Passive ('will have been signed') is required to denote an action that will be completed prior to a designated point (tomorrow's deadline) in the future.",
+                explanationAM: "የወደፊቱ ፍጹም ተገብሮ ድምፅ (Future Perfect Passive - 'will have been signed') ወደፊት ከተቀመጠው ገደብ (ከነገው የመጨረሻ ቀን) በፊት ተጠናቆ የሚጠናቀቅን ተግባር ለመግለጽ ይውላል።"
+            },
+            {
+                id: 7,
+                voice: "Passive Voice",
+                tenseType: "Past Simple Passive",
+                question: "The incoming students ___ the safety protocols of the science lab during their campus induction yesterday.",
+                options: [
+                    "were taught",
+                    "taught",
+                    "are taught",
+                    "have been taught"
+                ],
+                correctAnswer: 0,
+                explanationEN: "The Past Simple Passive ('were taught') is accurate because the lesson was delivered in the past ('yesterday') and the students received the training.",
+                explanationAM: "ያለፈው ቀላል ተገብሮ ድምፅ (Past Simple Passive - 'were taught') ትክክል ነው፤ ምክንያቱም ትምህርቱ ትናንት የተሰጠ ሲሆን ተማሪዎቹም ድርጊቱን የተቀበሉ ባለቤቶች ስለሆኑ ነው።"
+            },
+            {
+                id: 8,
+                voice: "Passive Voice",
+                tenseType: "Present Continuous Passive",
+                question: "Please take notice that while the national highway ___ , motorists are advised to proceed with extreme caution.",
+                options: [
+                    "is being repaired",
+                    "is repairing",
+                    "repaired",
+                    "was repaired"
+                ],
+                correctAnswer: 0,
+                explanationEN: "The Present Continuous Passive ('is being repaired') represents an action currently in progress on the subject (the highway) while another state is maintained.",
+                explanationAM: "የአሁኑ ቀጣይ ተገብሮ ድምፅ (Present Continuous Passive - 'is being repaired') ጥቅም ላይ የዋለው መንገዱ በአሁኑ ጊዜ በመጠገን ላይ መሆኑን እና አሁንም ድርጊቱ ያልተጠናቀቀ መሆኑን ለመግለጽ ነው።"
+            },
+            {
+                id: 9,
+                voice: "Active Voice",
+                tenseType: "Past Perfect Continuous",
+                question: "He ___ tirelessly for the university for over a decade before he decided to resign to pursue full-time research.",
+                options: [
+                    "had been working",
+                    "has worked",
+                    "was working",
+                    "had worked"
+                ],
+                correctAnswer: 0,
+                explanationEN: "The Past Perfect Continuous ('had been working') emphasizes the ongoing duration of a past action prior to another defined historical event ('resigned').",
+                explanationAM: "ያለፈው ፍጹም ቀጣይ ንቁ ድምፅ (Past Perfect Continuous - 'had been working') ሌላ ድርጊት (ከሥራ መልቀቅ) ከመከሰቱ በፊት ለረጅም ጊዜ ሲከናወን የነበረን ድርጊት የጊዜ ርዝመት ለማሳየት ይጠቅማል።"
+            },
+            {
+                id: 10,
+                voice: "Passive Voice",
+                tenseType: "Future Perfect Passive",
+                question: "The newly launched historical movie ___ by millions of viewers across Africa by the end of this year.",
+                options: [
+                    "will have been watched",
+                    "will watch",
+                    "is watched",
+                    "has been watched"
+                ],
+                correctAnswer: 0,
+                explanationEN: "The Future Perfect Passive ('will have been watched') indicates that by a future threshold ('end of this year'), the movie will have accumulated millions of passive views.",
+                explanationAM: "የወደፊቱ ፍጹም ተገብሮ ድምፅ (Future Perfect Passive - 'will have been watched') እስከ ዓመቱ መጨረሻ ድረስ ፊልሙ በሚሊዮኖች በሚቆጠሩ ተመልካቾች ታይቶ እንደሚጠናቀቅ ለመግለጽ ነው።"
+            },
+            {
+                id: 11,
+                voice: "Passive Voice",
+                tenseType: "Present Simple Passive",
+                question: "Our household waste ___ regularly once a week, usually on Friday mornings by municipal workers.",
+                options: [
+                    "is collected",
+                    "collects",
+                    "is collecting",
+                    "has collected"
+                ],
+                correctAnswer: 0,
+                explanationEN: "The Present Simple Passive ('is collected') is used for a regular weekly routine scheduled in passive terms.",
+                explanationAM: "የአሁኑ ቀላል ተገብሮ ድምፅ (Present Simple Passive - 'is collected') በየሳምንቱ አርብ ጠዋት የሚደጋገም ተግባርን በተገብሮ ድምፅ ለመግለጽ ጥቅም ላይ ውሏል።"
+            },
+            {
+                id: 12,
+                voice: "Active Voice",
+                tenseType: "Present Perfect Continuous",
+                question: "The development team ___ the exterior walls of the clinic since morning, but they have not completed it yet.",
+                options: [
+                    "have been painting",
+                    "painted",
+                    "are painting",
+                    "have painted"
+                ],
+                correctAnswer: 0,
+                explanationEN: "The Present Perfect Continuous ('have been painting') highlights an action that began in the past, has continued to the present moment, and remains incomplete.",
+                explanationAM: "የአሁኑ ፍጹም ቀጣይ ንቁ ድምፅ (Present Perfect Continuous - 'have been painting') ድርጊቱ ጠዋት ተጀምሮ እስካሁን ድረስ በሂደት ላይ ያለ እና ገና ያልተጠናቀቀ መሆኑን ለማጉላት ይጠቅማል።"
+            }
+        ];
+
+        // Global Application State Manager
+        let state = {
+            studentName: "",
+            studentId: "",
+            currentQuestionIndex: 0,
+            userResponses: new Array(quizQuestions.length).fill(null), // Holds selected index
+            graded: false,
+            timerInterval: null,
+            secondsElapsed: 0,
+            quizStartTime: null,
+            historicalRecords: [] // Simple in-memory tracker for simulation
+        };
+
+        // Window load sequence setup
+        window.onload = function() {
+            // State initialized. Ready for candidate registration
+            console.log("English Tenses Quiz Application loaded successfully.");
+        };
+
+        /**
+         * Custom toast notification module replacing standard blocked browser prompts.
+         */
+        function showNotification(message, type = "info") {
+            const toast = document.getElementById("toastNotification");
+            const icon = document.getElementById("toastIcon");
+            const msgEl = document.getElementById("toastMessage");
+
+            msgEl.textContent = message;
+            
+            // Set styles based on notification context
+            if (type === "success") {
+                toast.className = "fixed bottom-5 right-5 z-50 transform translate-y-0 opacity-100 transition-all duration-300 bg-emerald-900 text-emerald-100 px-5 py-4 rounded-xl shadow-2xl flex items-center space-x-3 border border-emerald-700 max-w-sm";
+                icon.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-400"></i>`;
+            } else if (type === "error") {
+                toast.className = "fixed bottom-5 right-5 z-50 transform translate-y-0 opacity-100 transition-all duration-300 bg-rose-900 text-rose-100 px-5 py-4 rounded-xl shadow-2xl flex items-center space-x-3 border border-rose-700 max-w-sm";
+                icon.innerHTML = `<i class="fa-solid fa-triangle-exclamation text-rose-400"></i>`;
+            } else {
+                toast.className = "fixed bottom-5 right-5 z-50 transform translate-y-0 opacity-100 transition-all duration-300 bg-slate-900 text-white px-5 py-4 rounded-xl shadow-2xl flex items-center space-x-3 border border-slate-700 max-w-sm";
+                icon.innerHTML = `<i class="fa-solid fa-circle-info text-sky-400"></i>`;
+            }
+
+            toast.classList.remove("hidden");
+            
+            // Animation sequence exit
+            setTimeout(() => {
+                toast.classList.add("opacity-0");
+                toast.classList.add("translate-y-10");
+                setTimeout(() => {
+                    toast.classList.add("hidden");
+                }, 300);
+            }, 4500);
+        }
+
+        /**
+         * Verifies inputs and begins the quiz assessment.
+         */
+        function handleRegistration(event) {
+            event.preventDefault();
+            
+            const nameInput = document.getElementById("studentName").value.trim();
+            const idInput = document.getElementById("studentId").value.trim();
+
+            if (!nameInput || !idInput) {
+                showNotification("Please provide both your Full Name and ID Number to proceed.", "error");
+                return;
+            }
+
+            state.studentName = nameInput;
+            state.studentId = idInput;
+
+            // Update registration layout transition
+            document.getElementById("registrationScreen").classList.add("hidden");
+            document.getElementById("quizBoard").classList.remove("hidden");
+            document.getElementById("headerTimer").classList.remove("hidden");
+
+            // Configure dynamic trackers
+            document.getElementById("totalQs").textContent = quizQuestions.length;
+            
+            // Start the assessment clock timer
+            startTimer();
+            
+            // Load first question card
+            renderQuestion();
+            showNotification(`Welcome ${state.studentName}. Your active assessment session has started!`, "success");
+        }
+
+        /**
+         * Activates time progression.
+         */
+        function startTimer() {
+            state.quizStartTime = new Date();
+            state.timerInterval = setInterval(() => {
+                state.secondsElapsed++;
+                const minutes = Math.floor(state.secondsElapsed / 60);
+                const seconds = state.secondsElapsed % 60;
+                
+                const formattedTime = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                document.getElementById("timeDisplay").textContent = formattedTime;
+            }, 1000);
+        }
+
+        /**
+         * Halts time progression.
+         */
+        function stopTimer() {
+            if (state.timerInterval) {
+                clearInterval(state.timerInterval);
+            }
+        }
+
+        /**
+         * Dynamically draws the question, options and state parameters.
+         */
+        function renderQuestion() {
+            const qIndex = state.currentQuestionIndex;
+            const q = quizQuestions[qIndex];
+
+            // Update Header Meta
+            document.getElementById("currentQNum").textContent = qIndex + 1;
+            document.getElementById("voiceBadge").textContent = q.voice;
+            document.getElementById("questionTenseType").textContent = q.tenseType;
+            
+            // Question main string
+            document.getElementById("questionText").innerHTML = `
+                <span class="inline-flex justify-center items-center bg-indigo-600 text-white w-7 h-7 rounded-full text-xs font-bold mr-2 align-middle">
+                    ${qIndex + 1}
+                </span>
+                ${q.question}
+            `;
+
+            // Progress bar and ratio adjustments
+            const progressPct = Math.round(((qIndex) / quizQuestions.length) * 100);
+            document.getElementById("progressBar").style.width = `${progressPct}%`;
+            document.getElementById("progressBarPercentage").textContent = `${progressPct}%`;
+            
+            // Update ratio count answered
+            const answeredCount = state.userResponses.filter(r => r !== null).length;
+            document.getElementById("answeredRatio").textContent = `${answeredCount}/${quizQuestions.length}`;
+
+            // Build options array list
+            const container = document.getElementById("optionsContainer");
+            container.innerHTML = "";
+
+            const studentSelected = state.userResponses[qIndex];
+
+            q.options.forEach((opt, idx) => {
+                const button = document.createElement("button");
+                button.type = "button";
+                button.className = "w-full text-left p-4 rounded-xl border transition-all duration-200 flex items-center justify-between text-sm md:text-base ";
+                
+                // Add alphabetical markers (A, B, C, D)
+                const prefixLetter = String.fromCharCode(65 + idx); // 65 is ASCII for 'A'
+                
+                let optionContent = `
+                    <div class="flex items-center space-x-3">
+                        <span class="flex-shrink-0 w-8 h-8 rounded-lg bg-slate-100 text-slate-600 font-bold flex items-center justify-center border border-slate-200">
+                            ${prefixLetter}
+                        </span>
+                        <span class="font-medium text-slate-800">${opt}</span>
+                    </div>
+                `;
+
+                // If user has already made an interaction selection, lock choice and show status
+                if (studentSelected !== null) {
+                    // Turn on feedback panel instantly
+                    renderFeedbackPanel(q, studentSelected);
+
+                    if (idx === q.correctAnswer) {
+                        // Correct option styling
+                        button.className += " bg-emerald-50 border-emerald-400 text-emerald-950 ring-2 ring-emerald-500/20";
+                        optionContent += `<span class="bg-emerald-200 text-emerald-800 text-xs font-bold px-2 py-1 rounded-md"><i class="fa-solid fa-check mr-1"></i> Correct</span>`;
+                    } else if (idx === studentSelected) {
+                        // Selected incorrect option styling
+                        button.className += " bg-rose-50 border-rose-400 text-rose-950 ring-2 ring-rose-500/20";
+                        optionContent += `<span class="bg-rose-200 text-rose-800 text-xs font-bold px-2 py-1 rounded-md"><i class="fa-solid fa-xmark mr-1"></i> Incorrect</span>`;
+                    } else {
+                        // Default options after grading selection (disabled)
+                        button.className += " bg-slate-50 border-slate-200 opacity-60 cursor-not-allowed";
+                    }
+                    button.disabled = true;
+                } else {
+                    // Regular default selection state active
+                    button.className += " bg-white border-slate-200 hover:border-indigo-400 hover:bg-indigo-50/35 cursor-pointer hover:shadow-sm";
+                    button.onclick = () => selectOption(idx);
+                }
+
+                button.innerHTML = optionContent;
+                container.appendChild(button);
+            });
+
+            // Adjust interactive navigation controls
+            document.getElementById("prevBtn").disabled = qIndex === 0;
+            
+            // Toggle visibility of submission card if total answers provided
+            if (answeredCount === quizQuestions.length) {
+                document.getElementById("submitBanner").classList.remove("hidden");
+            } else {
+                document.getElementById("submitBanner").classList.add("hidden");
+            }
+
+            // Hide feedback panel if user hasn't chosen an answer for this question yet
+            if (studentSelected === null) {
+                document.getElementById("feedbackPanel").classList.add("hidden");
+            }
+        }
+
+        /**
+         * Marks user response, saves it, and displays instant feedback context.
+         */
+        function selectOption(index) {
+            const qIndex = state.currentQuestionIndex;
+            
+            // Set choice in memory
+            state.userResponses[qIndex] = index;
+
+            // Trigger instant feedback
+            const q = quizQuestions[qIndex];
+            renderFeedbackPanel(q, index);
+            
+            // Re-render to show updated color styling on buttons
+            renderQuestion();
+
+            // Notify user of correctness
+            if (index === q.correctAnswer) {
+                showNotification("Excellent! That's correct.", "success");
+            } else {
+                showNotification("That is incorrect. Check the detailed explanations below.", "error");
+            }
+        }
+
+        /**
+         * Populates and renders the bilingual diagnostics panel.
+         */
+        function renderFeedbackPanel(q, selectedIdx) {
+            const panel = document.getElementById("feedbackPanel");
+            const title = document.getElementById("feedbackTitle");
+            const icon = document.getElementById("feedbackIcon");
+            const expEn = document.getElementById("explanationEN");
+            const expAm = document.getElementById("explanationAM");
+
+            panel.classList.remove("hidden");
+
+            // English and Amharic dynamic copy mapping
+            expEn.textContent = q.explanationEN;
+            expAm.textContent = q.explanationAM;
+
+            if (selectedIdx === q.correctAnswer) {
+                panel.className = "mt-6 rounded-xl border border-emerald-200 bg-emerald-50/50 p-5 transition-all duration-300";
+                title.className = "text-xs font-bold uppercase tracking-wider text-emerald-800 flex items-center";
+                title.innerHTML = `<i class="fa-solid fa-circle-check mr-2"></i> Correct Answer Selected / ትክክለኛ ምርጫ ተመርጧል`;
+                icon.innerHTML = "🎉";
+            } else {
+                panel.className = "mt-6 rounded-xl border border-rose-200 bg-rose-50/50 p-5 transition-all duration-300";
+                title.className = "text-xs font-bold uppercase tracking-wider text-rose-800 flex items-center";
+                title.innerHTML = `<i class="fa-solid fa-triangle-exclamation mr-2"></i> Incorrect Selection / የተሳሳተ ምርጫ`;
+                icon.innerHTML = "💡";
+            }
+        }
+
+        /**
+         * Shifts the dashboard index backwards.
+         */
+        function navigatePrevious() {
+            if (state.currentQuestionIndex > 0) {
+                state.currentQuestionIndex--;
+                renderQuestion();
+            }
+        }
+
+        /**
+         * Shifts the dashboard index forwards.
+         */
+        function navigateNext() {
+            if (state.currentQuestionIndex < quizQuestions.length - 1) {
+                state.currentQuestionIndex++;
+                renderQuestion();
+            } else {
+                showNotification("You've reached the final question. Submit your score using the panel below.", "info");
+            }
+        }
+
+        /**
+         * Skip option. Moves forward without picking an index.
+         */
+        function skipQuestion() {
+            showNotification("Question bypassed. You can navigate back to answer it later.", "info");
+            navigateNext();
+        }
+
+        /**
+         * Submits exam, compiles final scores, stops timer, and reveals statistics.
+         */
+        function triggerSubmitQuiz() {
+            const unanswered = quizQuestions.length - state.userResponses.filter(r => r !== null).length;
+            
+            if (unanswered > 0) {
+                showNotification(`Warning: You have left ${unanswered} question(s) blank. Navigate back to address them.`, "error");
+                return;
+            }
+
+            stopTimer();
+            state.graded = true;
+
+            // Compute diagnostic calculations
+            let correctCount = 0;
+            quizQuestions.forEach((q, idx) => {
+                if (state.userResponses[idx] === q.correctAnswer) {
+                    correctCount++;
+                }
+            });
+
+            const incorrectCount = quizQuestions.length - correctCount;
+            const percentage = Math.round((correctCount / quizQuestions.length) * 100);
+
+            // Record transaction locally into Teacher Monitor Session
+            const sessionRecord = {
+                name: state.studentName,
+                id: state.studentId,
+                scoreRatio: `${correctCount}/${quizQuestions.length}`,
+                percentage: `${percentage}%`,
+                timeTaken: document.getElementById("timeDisplay").textContent,
+                completedAt: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+            };
+            state.historicalRecords.unshift(sessionRecord);
+            updateTeacherRecordsUI();
+
+            // Populate Results UI Elements
+            document.getElementById("studentDetailSummary").innerHTML = `
+                Candidate Name: <strong>${state.studentName}</strong> | ID: <strong>${state.studentId}</strong>
+            `;
+
+            // Adjust scores radial circle stroke offset
+            const strokeOffset = 251.2 - (251.2 * percentage) / 100;
+            const progressCircle = document.getElementById("scoreProgressCircle");
+            
+            // Set color schemes based on performance thresholds
+            let badgeClass = "bg-rose-600 shadow-rose-300";
+            let appraisalStr = "Keep practicing! / ጥረት ማድረግ ያስፈልጋል።";
+            
+            if (percentage >= 80) {
+                badgeClass = "bg-emerald-600 shadow-emerald-300";
+                progressCircle.setAttribute("stroke", "#10b981"); // Green color stroke
+                appraisalStr = "Outstanding Tense Mastery! / እጅግ በጣም ምርጥ ስራ!";
+            } else if (percentage >= 50) {
+                badgeClass = "bg-amber-500 shadow-amber-300";
+                progressCircle.setAttribute("stroke", "#f59e0b"); // Orange color stroke
+                appraisalStr = "Decent Attempt! Try again for a perfect score. / ጥሩ ሙከራ!";
+            } else {
+                progressCircle.setAttribute("stroke", "#ef4444"); // Red color stroke
+            }
+
+            const rBadge = document.getElementById("resultBadge");
+            rBadge.className = `text-xs font-bold px-4 py-1.5 rounded-full uppercase tracking-widest text-white shadow-sm ${badgeClass}`;
+            rBadge.textContent = percentage >= 50 ? "PASSED" : "PRACTICE REQUIRED";
+
+            document.getElementById("scoreTextFraction").textContent = `${correctCount} / ${quizQuestions.length}`;
+            document.getElementById("scorePercentage").textContent = `${percentage}%`;
+            document.getElementById("appraisalMessage").textContent = appraisalStr;
+
+            // Stat columns configuration
+            document.getElementById("statTotal").textContent = quizQuestions.length;
+            document.getElementById("statCorrect").textContent = correctCount;
+            document.getElementById("statIncorrect").textContent = incorrectCount;
+            document.getElementById("statTime").textContent = document.getElementById("timeDisplay").textContent;
+
+            // Draw post-quiz review cards
+            generateReviewAuditLog();
+
+            // Transition displays
+            document.getElementById("quizBoard").classList.add("hidden");
+            document.getElementById("resultsScreen").classList.remove("hidden");
+            
+            // Start stroke animation
+            setTimeout(() => {
+                progressCircle.style.strokeDashoffset = strokeOffset;
+            }, 100);
+
+            showNotification(`Assessment completed! Final score compiled: ${percentage}%`, "success");
+        }
+
+        /**
+         * Renders all historical questions with user choice versus correct keys.
+         */
+        function generateReviewAuditLog() {
+            const auditContainer = document.getElementById("resultsAuditContainer");
+            auditContainer.innerHTML = "";
+
+            quizQuestions.forEach((q, idx) => {
+                const isCorrect = state.userResponses[idx] === q.correctAnswer;
+                const card = document.createElement("div");
+                card.className = "p-5 md:p-6 transition hover:bg-slate-50/50 flex flex-col space-y-3";
+
+                card.innerHTML = `
+                    <div class="flex flex-wrap items-center justify-between gap-2">
+                        <span class="text-xs font-semibold text-slate-400">Question ${idx + 1} • ${q.tenseType}</span>
+                        <span class="px-2.5 py-1 rounded text-xs font-bold flex items-center space-x-1 ${
+                            isCorrect ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800'
+                        }">
+                            <i class="${isCorrect ? 'fa-solid fa-circle-check' : 'fa-solid fa-circle-xmark'}"></i>
+                            <span>${isCorrect ? 'Correct' : 'Incorrect'}</span>
+                        </span>
+                    </div>
+                    <p class="font-bold text-slate-900 leading-relaxed text-sm md:text-base">${q.question}</p>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-xs py-2">
+                        <div class="p-2.5 rounded bg-slate-100 border border-slate-200">
+                            <span class="block font-bold text-slate-500 uppercase text-[9px]">Your Selection</span>
+                            <span class="font-semibold text-slate-800">${q.options[state.userResponses[idx]] || "Bypassed / Skipped"}</span>
+                        </div>
+                        <div class="p-2.5 rounded bg-emerald-50 border border-emerald-200">
+                            <span class="block font-bold text-emerald-600 uppercase text-[9px]">Correct Answer</span>
+                            <span class="font-semibold text-emerald-800">${q.options[q.correctAnswer]}</span>
+                        </div>
+                    </div>
+                    <div class="bg-indigo-50/50 border border-indigo-100 rounded-lg p-3 space-y-2 text-xs text-slate-700 leading-relaxed">
+                        <p><strong class="text-indigo-900">Analysis:</strong> ${q.explanationEN}</p>
+                        <p><strong class="text-amber-900">አማርኛ ትንተና:</strong> ${q.explanationAM}</p>
+                    </div>
+                `;
+                auditContainer.appendChild(card);
+            });
+        }
+
+        /**
+         * Builds structured email formats and dispatches them directly via client email links.
+         */
+        function dispatchScoreEmail() {
+            const teacherEmail = "mesayferedegn2@gmail.com";
+            
+            let correctCount = 0;
+            quizQuestions.forEach((q, idx) => {
+                if (state.userResponses[idx] === q.correctAnswer) {
+                    correctCount++;
+                }
+            });
+            const percentage = Math.round((correctCount / quizQuestions.length) * 100);
+            const timeStr = document.getElementById("timeDisplay").textContent;
+
+            // Constructing clean structured text format
+            const emailSubject = encodeURIComponent(`English Tenses Quiz Results - ${state.studentName} (${state.studentId})`);
+            
+            let emailBody = `==================================================\n`;
+            emailBody += `ENGLISH TENSES ASSESSMENT SCORE REPORT\n`;
+            emailBody += `==================================================\n\n`;
+            emailBody += `Student Full Name : ${state.studentName}\n`;
+            emailBody += `Student ID Number : ${state.studentId}\n`;
+            emailBody += `Date Completed    : ${new Date().toLocaleDateString()}\n`;
+            emailBody += `Time Elapsed      : ${timeStr}\n\n`;
+            emailBody += `--------------------------------------------------\n`;
+            emailBody += `GRADES & SCORE SUMMARY:\n`;
+            emailBody += `--------------------------------------------------\n`;
+            emailBody += `Total Correct     : ${correctCount} / ${quizQuestions.length}\n`;
+            emailBody += `Final Percentage  : ${percentage}%\n`;
+            emailBody += `Overall Status    : ${percentage >= 50 ? "PASS" : "NEEDS IMPROVEMENT"}\n\n`;
+            emailBody += `--------------------------------------------------\n`;
+            emailBody += `ITEM BREAKDOWN ANALYSIS:\n`;
+            emailBody += `--------------------------------------------------\n`;
+
+            quizQuestions.forEach((q, idx) => {
+                const selectedAns = q.options[state.userResponses[idx]] || "Skipped / No Answer";
+                const correctAns = q.options[q.correctAnswer];
+                const outcome = state.userResponses[idx] === q.correctAnswer ? "CORRECT" : "INCORRECT";
+
+                emailBody += `Question ${idx + 1}: ${q.question}\n`;
+                emailBody += `  - Selected Answer : ${selectedAns}\n`;
+                emailBody += `  - Correct Answer  : ${correctAns}\n`;
+                emailBody += `  - Outcome         : ${outcome}\n\n`;
+            });
+
+            emailBody += `==================================================\n`;
+            emailBody += `Generated by Diagnostic Quiz Engine Platform\n`;
+            emailBody += `==================================================`;
+
+            const encodedBody = encodeURIComponent(emailBody);
+
+            // Constructing standard formatted native mailto deep link
+            const mailtoUrl = `mailto:${teacherEmail}?subject=${emailSubject}&body=${encodedBody}`;
+            
+            // Prompt dispatcher
+            showNotification("Your mail application is opening to send the pre-compiled scorecard report.", "success");
+            
+            // Execute opening sequence
+            window.location.href = mailtoUrl;
+        }
+
+        /**
+         * Clears temporary cache parameters and restarts registration.
+         */
+        function restartAssessment() {
+            // Reset state model
+            state.currentQuestionIndex = 0;
+            state.userResponses = new Array(quizQuestions.length).fill(null);
+            state.graded = false;
+            state.secondsElapsed = 0;
+            
+            // Clear timer display values
+            document.getElementById("timeDisplay").textContent = "00:00";
+            
+            // Transitions
+            document.getElementById("resultsScreen").classList.add("hidden");
+            document.getElementById("registrationScreen").classList.remove("hidden");
+            document.getElementById("headerTimer").classList.add("hidden");
+            
+            // Focus on input
+            document.getElementById("registrationForm").reset();
+            showNotification("State flushed. Ready for new student assessment registration.", "info");
+        }
+
+        /**
+         * Toggles the teacher dashboard console open or closed.
+         */
+        function toggleTeacherMode() {
+            document.getElementById("registrationScreen").classList.add("hidden");
+            document.getElementById("quizBoard").classList.add("hidden");
+            document.getElementById("resultsScreen").classList.add("hidden");
+            document.getElementById("teacherConsole").classList.remove("hidden");
+            showNotification("Teacher Panel opened.", "info");
+        }
+
+        function closeTeacherMode() {
+            document.getElementById("teacherConsole").classList.add("hidden");
+            
+            // Back to registration if not initialized, otherwise to active dashboard
+            if (state.studentName && !state.graded) {
+                document.getElementById("quizBoard").classList.remove("hidden");
+            } else if (state.graded) {
+                document.getElementById("resultsScreen").classList.remove("hidden");
+            } else {
+                document.getElementById("registrationScreen").classList.remove("hidden");
+            }
+        }
+
+        /**
+         * Refreshes the HTML list view inside the teacher console table.
+         */
+        function updateTeacherRecordsUI() {
+            const tbody = document.getElementById("teacherRecordsTable");
+            
+            if (state.historicalRecords.length === 0) {
+                tbody.innerHTML = `
+                    <tr class="placeholder-row">
+                        <td colspan="6" class="px-6 py-10 text-center text-slate-400 font-medium">
+                            <i class="fa-solid fa-folder-open text-3xl mb-2.5 block text-slate-300"></i>
+                            No candidates have submitted completed assessments in this active web session yet.
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            tbody.innerHTML = "";
+            let sumPercent = 0;
+            let highestPercent = 0;
+
+            state.historicalRecords.forEach((record) => {
+                const tr = document.createElement("tr");
+                tr.className = "hover:bg-slate-50 transition border-b border-slate-100 text-xs sm:text-sm";
+                
+                const pctVal = parseInt(record.percentage);
+                sumPercent += pctVal;
+                if (pctVal > highestPercent) {
+                    highestPercent = pctVal;
+                }
+
+                tr.innerHTML = `
+                    <td class="px-6 py-4 font-bold text-slate-900">${record.name}</td>
+                    <td class="px-6 py-4 font-mono">${record.id}</td>
+                    <td class="px-6 py-4 text-center font-semibold">${record.scoreRatio}</td>
+                    <td class="px-6 py-4 text-center">
+                        <span class="px-2.5 py-1 rounded-full font-bold ${
+                            pctVal >= 80 ? 'bg-emerald-100 text-emerald-800' : pctVal >= 50 ? 'bg-amber-100 text-amber-800' : 'bg-rose-100 text-rose-800'
+                        }">
+                            ${record.percentage}
+                        </span>
+                    </td>
+                    <td class="px-6 py-4 text-center font-mono">${record.timeTaken}</td>
+                    <td class="px-6 py-4 text-right text-slate-400 font-medium">${record.completedAt}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            // Update Metric summary blocks
+            const avgPercent = Math.round(sumPercent / state.historicalRecords.length);
+            document.getElementById("adminTotalCandidates").textContent = state.historicalRecords.length;
+            document.getElementById("adminAverageScore").textContent = `${avgPercent}%`;
+            document.getElementById("adminTopScore").textContent = `${highestPercent}%`;
+        }
+
+        /**
+         * Loads pre-generated dummy test scores inside memory to showcase functionality.
+         */
+        function seedMockData() {
+            state.historicalRecords = [
+                {
+                    name: "Aster Assefa",
+                    id: "RU/8041/17",
+                    scoreRatio: "11/12",
+                    percentage: "92%",
+                    timeTaken: "04:32",
+                    completedAt: "10:15 AM"
+                },
+                {
+                    name: "Dawit Worku",
+                    id: "RU/5214/17",
+                    scoreRatio: "8/12",
+                    percentage: "67%",
+                    timeTaken: "06:11",
+                    completedAt: "11:02 AM"
+                },
+                {
+                    name: "Meron Hailu",
+                    id: "RU/2330/17",
+                    scoreRatio: "5/12",
+                    percentage: "42%",
+                    timeTaken: "08:50",
+                    completedAt: "01:24 PM"
+                }
+            ];
+            updateTeacherRecordsUI();
+            showNotification("In-memory database pre-seeded with model records.", "success");
+        }
+    </script>
+</body>
+</html>
